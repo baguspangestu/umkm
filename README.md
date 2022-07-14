@@ -1,3 +1,3 @@
 # UMKM KABUPATEN PRINGSEWU
 
-## Tugas Akhir
+Tugas Akhir - Kentas Adi Saputra
