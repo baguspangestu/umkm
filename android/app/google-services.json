@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "64498813798",
+    "project_id": "umkm-pringsewu",
+    "storage_bucket": "umkm-pringsewu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64498813798:android:c671cc6994bb428b8f56a7",
+        "android_client_info": {
+          "package_name": "com.kentasadisaputra.umkm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64498813798-q4qmpjl9sjrnl9qaelv964te2kfqu21s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA9VJvMfU_nzbbx05iwzdDocCnrls_QJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64498813798-q4qmpjl9sjrnl9qaelv964te2kfqu21s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
