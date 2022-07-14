@@ -87,6 +87,12 @@ class LoginController extends GetxController {
     final response = await authC.register(data);
 
     if (response['status']) {
+      authC.sendVerif();
+      btnController.success();
+      Timer(const Duration(seconds: 1), () async {
+        await authC.isAuth();
+        btnController.reset();
+      });
     } else {
       btnController.error();
       errorDialog(response['message']);
@@ -97,6 +103,11 @@ class LoginController extends GetxController {
     final response = await authC.checkVerif();
 
     if (response['status']) {
+      btnController.success();
+      Timer(
+        const Duration(seconds: 1),
+        () => Get.offAllNamed(Routes.home),
+      );
     } else {
       btnController.error();
       errorDialog(response['message']);
@@ -108,7 +119,9 @@ class LoginController extends GetxController {
 
     if (response['status']) {
       if (authC.loggedin.isTrue) {
-        resetButton(true);
+        Timer(const Duration(milliseconds: 500), () {
+          if (authC.verified.isTrue) Get.offAllNamed(Routes.home);
+        });
       }
     } else {
       btnController.error();

@@ -18,6 +18,9 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     initDisplay();
+    if (authC.loggedin.isTrue && authC.verified.isFalse) {
+      changeTabIndex(1);
+    }
     super.onInit();
   }
 

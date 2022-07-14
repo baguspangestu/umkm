@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -12,8 +10,8 @@ class AuthController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    await auth.currentUser?.reload();
-    isAuth();
+    auth.currentUser?.reload();
+    await isAuth();
     super.onInit();
   }
 
@@ -24,7 +22,6 @@ class AuthController extends GetxController {
           loggedin.value = true;
           verified.value = user.emailVerified;
           admin.value = user.email == 'admin.umkmpringsewu@gmail.com';
-          print(user);
         } else {
           loggedin.value = false;
           verified.value = false;
@@ -46,8 +43,10 @@ class AuthController extends GetxController {
         email: data['email'],
         password: data['password'],
       );
-      isAuth();
-      response = sendVerif() as Map<String, Object>;
+      response = {
+        'status': true,
+        'message': 'Berhasil mendaftar',
+      };
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         response = {
@@ -77,9 +76,8 @@ class AuthController extends GetxController {
   }
 
   Future<Map> sendVerif() async {
-    final user = auth.currentUser;
     try {
-      await user?.sendEmailVerification();
+      await auth.currentUser?.sendEmailVerification();
       return {
         'status': true,
         'message': 'Link verifikasi telah dikirim ke email kamu.',
@@ -93,9 +91,12 @@ class AuthController extends GetxController {
   }
 
   Future<Map> checkVerif() async {
-    final user = auth.currentUser;
     try {
-      await user?.reload();
+      await auth.currentUser?.reload();
+      final user = auth.currentUser;
+      loggedin.value = user != null ? true : false;
+      verified.value = user?.emailVerified ?? false;
+      admin.value = user?.email == 'admin.umkmpringsewu@gmail.com';
       if (user?.emailVerified ?? false) {
         return {
           'status': true,
@@ -138,15 +139,27 @@ class AuthController extends GetxController {
         email: data['email'],
         password: data['password'],
       );
-      isAuth();
+      await isAuth();
       response = {
         'status': true,
         'message': 'Berhasil Login',
       };
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'too-many-requests') {
+        response = {
+          'status': false,
+          'message': 'Terlalu banyak percobaan login, coba lagi nanti!',
+        };
+      } else {
+        response = {
+          'status': false,
+          'message': 'Email atau Password salah!',
+        };
+      }
     } catch (_) {
       response = {
         'status': false,
-        'message': 'Email atau Password salah!',
+        'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
       };
     }
 
@@ -155,7 +168,7 @@ class AuthController extends GetxController {
 
   Future<Map> logout() async {
     await auth.signOut();
-    isAuth();
+    await isAuth();
     return {
       'status': true,
       'message': 'Berhasil Logout',
