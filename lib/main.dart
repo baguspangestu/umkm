@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'Lato',
         primarySwatch: Colors.green,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
