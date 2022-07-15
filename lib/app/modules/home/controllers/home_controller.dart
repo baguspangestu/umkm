@@ -1,4 +1,5 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:umkm/app/modules/myumkm/views/myumkm_view.dart';
@@ -18,14 +19,17 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     initDisplay();
-    if (authC.loggedin.isTrue && authC.verified.isFalse) {
-      changeTabIndex(1);
-    }
     super.onInit();
   }
 
   void initDisplay() {
-    if (authC.loggedin.isTrue && authC.admin.isTrue) {
+    if (kDebugMode) {
+      print('loggedIn: ${authC.loggedIn.value}');
+      print('verified: ${authC.verified.value}');
+      print('admin: ${authC.admin.value}');
+    }
+
+    if (authC.loggedIn.isTrue && authC.admin.isTrue) {
       displays.value = {
         'icons': [
           navbarItem(Icons.home),
@@ -38,7 +42,7 @@ class HomeController extends GetxController {
           const ProfileView(),
         ],
       };
-    } else if (authC.loggedin.isTrue && authC.verified.isTrue) {
+    } else if (authC.loggedIn.isTrue && authC.verified.isTrue) {
       displays.value = {
         'icons': [
           navbarItem(Icons.home),
@@ -56,6 +60,9 @@ class HomeController extends GetxController {
         'icons': [navbarItem(Icons.home), navbarItem(Icons.login)],
         'pages': [const UmkmView(), const LoginView()],
       };
+      if (authC.loggedIn.isTrue && authC.verified.isFalse) {
+        changeTabIndex(1);
+      }
     }
   }
 

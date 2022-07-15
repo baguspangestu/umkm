@@ -1,38 +1,65 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:umkm/app/config/config.dart';
+
+import '../routes/app_pages.dart';
 
 class AuthController extends GetxController {
-  FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
-  final RxBool loggedin = false.obs;
+  final RxBool loggedIn = false.obs;
   final RxBool verified = false.obs;
   final RxBool admin = false.obs;
 
   @override
   Future<void> onInit() async {
-    auth.currentUser?.reload();
-    await isAuth();
+    isAuth();
     super.onInit();
   }
 
-  Future<void> isAuth() async {
+  void isAuth() async {
     try {
       auth.authStateChanges().listen((User? user) {
         if (user != null) {
-          loggedin.value = true;
-          verified.value = user.emailVerified;
-          admin.value = user.email == 'admin.umkmpringsewu@gmail.com';
+          cuVar(user);
+          reAuth(user);
         } else {
-          loggedin.value = false;
-          verified.value = false;
-          admin.value = false;
+          deVar();
         }
       });
     } catch (_) {
-      loggedin.value = false;
-      verified.value = false;
-      admin.value = false;
+      deVar();
     }
+  }
+
+  Future<void> reAuth(User user) async {
+    try {
+      await auth.currentUser!.reload();
+      final reloadedUser = auth.currentUser;
+      if (reloadedUser != null) {
+        if (user.emailVerified != reloadedUser.emailVerified) {
+          Get.offAllNamed(Routes.home);
+        }
+      } else {
+        deVar();
+      }
+    } catch (_) {
+      deVar();
+    }
+  }
+
+  void cuVar(User user) {
+    loggedIn.value = true;
+    verified.value = user.emailVerified;
+    admin.value = Config.app.adminRole.contains(user.email);
+  }
+
+  void deVar() {
+    loggedIn.value = false;
+    verified.value = false;
+    admin.value = false;
   }
 
   Future<Map> register(Map data) async {
@@ -93,11 +120,12 @@ class AuthController extends GetxController {
   Future<Map> checkVerif() async {
     try {
       await auth.currentUser?.reload();
-      final user = auth.currentUser;
-      loggedin.value = user != null ? true : false;
-      verified.value = user?.emailVerified ?? false;
-      admin.value = user?.email == 'admin.umkmpringsewu@gmail.com';
-      if (user?.emailVerified ?? false) {
+      final user = auth.currentUser!;
+      if (user.emailVerified) {
+        Timer(const Duration(milliseconds: 500), () {
+          cuVar(user);
+          Get.offAllNamed(Routes.home);
+        });
         return {
           'status': true,
           'message': 'Email kamu sudah diverifikasi.',
@@ -139,7 +167,6 @@ class AuthController extends GetxController {
         email: data['email'],
         password: data['password'],
       );
-      await isAuth();
       response = {
         'status': true,
         'message': 'Berhasil Login',
@@ -168,7 +195,7 @@ class AuthController extends GetxController {
 
   Future<Map> logout() async {
     await auth.signOut();
-    await isAuth();
+    isAuth();
     return {
       'status': true,
       'message': 'Berhasil Logout',

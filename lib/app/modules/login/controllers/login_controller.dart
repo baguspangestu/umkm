@@ -89,8 +89,7 @@ class LoginController extends GetxController {
     if (response['status']) {
       authC.sendVerif();
       btnController.success();
-      Timer(const Duration(seconds: 1), () async {
-        await authC.isAuth();
+      Timer(const Duration(milliseconds: 500), () async {
         btnController.reset();
       });
     } else {
@@ -104,10 +103,6 @@ class LoginController extends GetxController {
 
     if (response['status']) {
       btnController.success();
-      Timer(
-        const Duration(seconds: 1),
-        () => Get.offAllNamed(Routes.home),
-      );
     } else {
       btnController.error();
       errorDialog(response['message']);
@@ -118,9 +113,15 @@ class LoginController extends GetxController {
     final response = await authC.login(data);
 
     if (response['status']) {
-      if (authC.loggedin.isTrue) {
+      if (authC.loggedIn.isTrue) {
+        btnController.success();
         Timer(const Duration(milliseconds: 500), () {
-          if (authC.verified.isTrue) Get.offAllNamed(Routes.home);
+          if (authC.verified.isTrue || authC.admin.isTrue) {
+            Get.offAllNamed(Routes.home);
+          } else {
+            authC.sendVerif();
+            btnController.reset();
+          }
         });
       }
     } else {
@@ -142,7 +143,7 @@ class LoginController extends GetxController {
     };
 
     if (isValidForm) {
-      if (authC.loggedin.isTrue && authC.verified.isFalse) {
+      if (authC.loggedIn.isTrue && authC.verified.isFalse) {
         checkVerif();
       } else {
         if (formLogin.value) {

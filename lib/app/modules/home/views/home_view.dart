@@ -1,6 +1,7 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:umkm/app/config/config.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends StatelessWidget {
@@ -13,7 +14,7 @@ class HomeView extends StatelessWidget {
           appBar: AppBar(
             toolbarHeight: Get.height * 0.1,
             title: ListTile(
-              leading: Image.asset('assets/images/pringsewu.png'),
+              leading: Image.asset(Config.app.logo),
               title: const Text(
                 'USAHA MIKRO KECIL MENENGAH (UMKM) KABUPATEN PRINGSEWU',
                 style: TextStyle(

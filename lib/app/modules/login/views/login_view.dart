@@ -39,8 +39,9 @@ class LoginView extends GetView<LoginController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              controller.authC.loggedin.isTrue &&
-                                      controller.authC.verified.isFalse
+                              controller.authC.loggedIn.isTrue &&
+                                      controller.authC.verified.isFalse &&
+                                      controller.authC.admin.isFalse
                                   ? 'Verifikasi Email'
                                   : controller.formLogin.isTrue
                                       ? 'Masuk Akun'
@@ -49,8 +50,9 @@ class LoginView extends GetView<LoginController> {
                             ),
                             const Divider(),
                             Visibility(
-                              visible: controller.authC.loggedin.isTrue &&
-                                  controller.authC.verified.isFalse,
+                              visible: controller.authC.loggedIn.isTrue &&
+                                  controller.authC.verified.isFalse &&
+                                  controller.authC.admin.isFalse,
                               replacement: Column(
                                 children: [
                                   const SizedBox(height: 8),
@@ -173,9 +175,9 @@ class LoginView extends GetView<LoginController> {
                               onPressed: controller.submit,
                               color: Get.theme.buttonTheme.colorScheme?.primary,
                               child: Text(
-                                (controller.authC.loggedin.isTrue &&
-                                            controller
-                                                .authC.verified.isFalse) ||
+                                (controller.authC.loggedIn.isTrue &&
+                                            controller.authC.verified.isFalse &&
+                                            controller.authC.admin.isFalse) ||
                                         controller.formLogin.isTrue
                                     ? 'MASUK'
                                     : 'DAFTAR',
@@ -183,7 +185,7 @@ class LoginView extends GetView<LoginController> {
                               ),
                             ),
                             Visibility(
-                              visible: controller.authC.loggedin.isFalse,
+                              visible: controller.authC.loggedIn.isFalse,
                               child: Column(
                                 children: [
                                   const SizedBox(height: 16),
