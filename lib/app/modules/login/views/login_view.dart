@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:umkm/app/widgets/email_field_widget.dart';
+import '../../../config/config.dart';
 import '../../../widgets/password_field_widget.dart';
 import '../controllers/login_controller.dart';
 
@@ -139,6 +140,11 @@ class LoginView extends GetView<LoginController> {
                                                       label: 'Oke',
                                                       onPressed: () {},
                                                     ),
+                                                  );
+
+                                                  Get.snackbar(
+                                                    'Informasi',
+                                                    'Fitur ini belum tersedia saat ini.',
                                                   );
 
                                                   ScaffoldMessenger.of(context)
@@ -286,30 +292,30 @@ class LoginView extends GetView<LoginController> {
                 ),
               ),
             ),
-            const Center(
+            Center(
               child: Text(
-                'App v1.0.0',
-                style: TextStyle(
+                'App v${Config.app.version}',
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black54,
                 ),
               ),
             ),
             const SizedBox(height: 4),
-            const Center(
+            Center(
               child: Text(
-                'UMKM KABUPATEN PRINGSEWU',
-                style: TextStyle(
+                Config.app.fullName,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black54,
                 ),
               ),
             ),
             const SizedBox(height: 4),
-            const Center(
+            Center(
               child: Text(
-                '@2022 Kentas Adi Saputra',
-                style: TextStyle(
+                '${Config.app.copyright} - ${Config.app.developer}',
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black54,
                 ),

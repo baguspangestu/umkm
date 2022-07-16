@@ -13,7 +13,6 @@ dependencies:
   custom_navigation_bar: ^0.8.2
   firebase_core: ^1.19.1
   firebase_auth: ^3.4.1
-  flutter_native_splash: ^2.2.4
   rounded_loading_button: ^2.1.0
   validators: ^3.0.0
   toggle_switch: ^2.0.1
@@ -22,10 +21,19 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^2.2.4
 
 flutter_native_splash:
   color: "#ffffff"
   image: assets/images/logo.png
+  color_dark: "#121212"
+  image_dark: assets/images/logo.png
+
+  android_12:
+    image: assets/images/logo.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/images/logo.png
+    icon_background_color_dark: "#121212"
 
   web: false
 

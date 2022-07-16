@@ -7,9 +7,12 @@ class Config {
 class App {
   const App();
   String get name => 'UMKM PRINGSEWU';
+  String get fullName => 'UMKM KABUPATEN PRINGSEWU';
   String get longName =>
       'USAHA MIKRO KECIL MENENGAH (UMKM) KABUPATEN PRINGSEWU';
   String get version => '1.0.0';
+  String get copyright => '©2022';
+  String get developer => 'Kentas Adi Saputra';
   String get font => 'Lato';
   String get logo => 'assets/images/logo.png';
   MaterialColor get colorPrimary => Colors.green;

@@ -63,43 +63,39 @@ class AuthController extends GetxController {
   }
 
   Future<Map> register(Map data) async {
-    Map<String, Object> response;
-
     try {
       await auth.createUserWithEmailAndPassword(
         email: data['email'],
         password: data['password'],
       );
-      response = {
+      return {
         'status': true,
         'message': 'Berhasil mendaftar',
       };
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        response = {
+        return {
           'status': false,
           'message': 'Password terlalu lemah!',
         };
       } else if (e.code == 'email-already-in-use') {
-        response = {
+        return {
           'status': false,
           'message':
               'Email ini sudah terdaftar, silakan masuk dengan password yang sudah didaftarkan!',
         };
       } else {
-        response = {
+        return {
           'status': false,
           'message': e.code,
         };
       }
     } catch (_) {
-      response = {
+      return {
         'status': false,
         'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
       };
     }
-
-    return response;
   }
 
   Future<Map> sendVerif() async {
@@ -136,10 +132,22 @@ class AuthController extends GetxController {
           'message': 'Email kamu belum diverifikasi.',
         };
       }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return {
+          'status': false,
+          'message': 'Email kamu belum terdaftar.',
+        };
+      } else {
+        return {
+          'status': false,
+          'message': e.message,
+        };
+      }
     } catch (_) {
       return {
         'status': false,
-        'message': 'Gagal memeriksa verifikasi email!',
+        'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
       };
     }
   }
@@ -150,7 +158,7 @@ class AuthController extends GetxController {
       return {
         'status': true,
         'message':
-            'Link reset password telah dikirim ke email kamu, silakan cek di folder spam jika tidak ada, kemudian login dengan password baru.',
+            'Link reset password telah dikirim ke email kamu, silakan cek di folder spam jika tidak ada. Jika sudah membuat password baru, silakan login menggunakan password baru.',
       };
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -173,37 +181,33 @@ class AuthController extends GetxController {
   }
 
   Future<Map> login(Map data) async {
-    Map<String, Object> response;
-
     try {
       await auth.signInWithEmailAndPassword(
         email: data['email'],
         password: data['password'],
       );
-      response = {
+      return {
         'status': true,
         'message': 'Berhasil Login',
       };
     } on FirebaseAuthException catch (e) {
       if (e.code == 'too-many-requests') {
-        response = {
+        return {
           'status': false,
           'message': 'Terlalu banyak percobaan login, coba lagi nanti!',
         };
       } else {
-        response = {
+        return {
           'status': false,
           'message': 'Email atau Password salah!',
         };
       }
     } catch (_) {
-      response = {
+      return {
         'status': false,
         'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
       };
     }
-
-    return response;
   }
 
   Future<Map> logout() async {
