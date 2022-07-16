@@ -89,7 +89,7 @@ class AuthController extends GetxController {
       } else {
         response = {
           'status': false,
-          'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
+          'message': e.code,
         };
       }
     } catch (_) {
@@ -149,12 +149,25 @@ class AuthController extends GetxController {
       await auth.sendPasswordResetEmail(email: data['email']);
       return {
         'status': true,
-        'message': 'Link reset password telah dikirim ke email kamu.',
+        'message':
+            'Link reset password telah dikirim ke email kamu, silakan cek di folder spam jika tidak ada, kemudian login dengan password baru.',
       };
-    } catch (_) {
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return {
+          'status': false,
+          'message': 'Email ini tidak terdaftar!',
+        };
+      } else {
+        return {
+          'status': false,
+          'message': e.message,
+        };
+      }
+    } catch (e) {
       return {
         'status': false,
-        'message': 'Gagal mengirim link reset password!',
+        'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
       };
     }
   }

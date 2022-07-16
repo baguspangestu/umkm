@@ -13,7 +13,7 @@ class MyumkmView extends GetView<MyumkmController> {
         title: const Text('MyumkmView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'MyumkmView is working',
           style: TextStyle(fontSize: 20),

@@ -5,11 +5,6 @@ import 'package:umkm/app/widgets/email_field_widget.dart';
 import '../../../widgets/password_field_widget.dart';
 import '../controllers/login_controller.dart';
 
-const users = {
-  'baguspangestu44@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
-};
-
 class LoginView extends GetView<LoginController> {
   const LoginView({Key? key}) : super(key: key);
 
@@ -43,9 +38,11 @@ class LoginView extends GetView<LoginController> {
                                       controller.authC.verified.isFalse &&
                                       controller.authC.admin.isFalse
                                   ? 'Verifikasi Email'
-                                  : controller.formLogin.isTrue
-                                      ? 'Masuk Akun'
-                                      : 'Pendaftaran',
+                                  : controller.formFPass.isTrue
+                                      ? 'Lupa Password'
+                                      : controller.formLogin.isTrue
+                                          ? 'Masuk Akun'
+                                          : 'Pendaftaran',
                               style: const TextStyle(fontSize: 24),
                             ),
                             const Divider(),
@@ -60,33 +57,42 @@ class LoginView extends GetView<LoginController> {
                                     controller: controller.dataForm['email']!,
                                     validator: controller.validator['email']!,
                                   ),
-                                  const SizedBox(height: 16),
-                                  PasswordFieldWidget(
-                                    controller:
-                                        controller.dataForm['password']!,
-                                    validator:
-                                        controller.validator['password']!,
-                                  ),
-                                  const SizedBox(height: 16),
                                   Visibility(
-                                    visible: controller.formLogin.isTrue,
-                                    replacement: PasswordFieldWidget(
-                                      label: 'Ulangi Password',
-                                      autoFillHints: null,
-                                      controller:
-                                          controller.dataForm['re_password']!,
-                                      validator:
-                                          controller.validator['re_password']!,
-                                    ),
-                                    child: Container(
-                                      alignment: Alignment.topLeft,
-                                      child: InkWell(
-                                        onTap: controller.forgotPassword,
-                                        child: Text('Lupa Password?',
-                                            style: TextStyle(
-                                                color: Get.theme.buttonTheme
-                                                    .colorScheme?.primary)),
-                                      ),
+                                    visible: controller.formFPass.isFalse,
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 16),
+                                        PasswordFieldWidget(
+                                          controller:
+                                              controller.dataForm['password']!,
+                                          validator:
+                                              controller.validator['password']!,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Visibility(
+                                          visible: controller.formLogin.isTrue,
+                                          replacement: PasswordFieldWidget(
+                                            label: 'Ulangi Password',
+                                            autoFillHints: null,
+                                            controller: controller
+                                                .dataForm['re_password']!,
+                                            validator: controller
+                                                .validator['re_password']!,
+                                          ),
+                                          child: Container(
+                                            alignment: Alignment.topLeft,
+                                            child: InkWell(
+                                              onTap: controller.switchFPas,
+                                              child: Text(
+                                                'Lupa Password?',
+                                                style: TextStyle(
+                                                    color: Get.theme.buttonTheme
+                                                        .colorScheme!.primary),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -123,7 +129,21 @@ class LoginView extends GetView<LoginController> {
                                                 ),
                                               ),
                                               InkWell(
-                                                onTap: () {},
+                                                onTap: () {
+                                                  final snackBar = SnackBar(
+                                                    behavior: SnackBarBehavior
+                                                        .floating,
+                                                    content: const Text(
+                                                        'Fitur ini belum tersedia saat ini.'),
+                                                    action: SnackBarAction(
+                                                      label: 'Oke',
+                                                      onPressed: () {},
+                                                    ),
+                                                  );
+
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(snackBar);
+                                                },
                                                 child: Container(
                                                   margin:
                                                       const EdgeInsets.all(8),
@@ -140,20 +160,56 @@ class LoginView extends GetView<LoginController> {
                                         ),
                                       ),
                                       Material(
-                                        color: Get.theme.buttonTheme.colorScheme
-                                            ?.primary,
+                                        color:
+                                            controller.countdown.value == 0 &&
+                                                    controller.loading.isFalse
+                                                ? Get.theme.buttonTheme
+                                                    .colorScheme?.primary
+                                                : Colors.grey,
                                         elevation: 1,
                                         borderRadius: BorderRadius.circular(4),
                                         child: InkWell(
-                                          onTap: () {},
+                                          onTap:
+                                              controller.countdown.value == 0 &&
+                                                      controller.loading.isFalse
+                                                  ? controller.onSendVerif
+                                                  : null,
                                           borderRadius:
                                               BorderRadius.circular(4),
-                                          child: const Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child: Text(
-                                              'Kirim Ulang',
-                                              style: TextStyle(
-                                                color: Colors.white,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Visibility(
+                                              visible:
+                                                  controller.loading.isTrue,
+                                              replacement: Visibility(
+                                                visible: controller
+                                                        .countdown.value ==
+                                                    60,
+                                                replacement: Text(
+                                                  controller.countdown.value ==
+                                                          0
+                                                      ? 'Kirim Ulang'
+                                                      : '${controller.countdown.value}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                child: const Icon(
+                                                  Icons.check,
+                                                  size: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              child: SizedBox(
+                                                width: 14,
+                                                height: 14,
+                                                child: Transform.scale(
+                                                  scale: 0.5,
+                                                  child:
+                                                      const CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -172,16 +228,32 @@ class LoginView extends GetView<LoginController> {
                             const SizedBox(height: 16),
                             RoundedLoadingButton(
                               controller: controller.btnController,
-                              onPressed: controller.submit,
+                              onPressed: controller.formFPass.isTrue &&
+                                      controller.countdown.value != 0
+                                  ? null
+                                  : controller.onSubmit,
                               color: Get.theme.buttonTheme.colorScheme?.primary,
                               child: Text(
-                                (controller.authC.loggedIn.isTrue &&
-                                            controller.authC.verified.isFalse &&
-                                            controller.authC.admin.isFalse) ||
-                                        controller.formLogin.isTrue
+                                controller.authC.loggedIn.isTrue &&
+                                        controller.authC.verified.isFalse &&
+                                        controller.authC.admin.isFalse
                                     ? 'MASUK'
-                                    : 'DAFTAR',
-                                style: const TextStyle(color: Colors.white),
+                                    : controller.formFPass.isTrue &&
+                                            controller.countdown.value != 0
+                                        ? '${controller.countdown.value}'
+                                        : controller.formFPass.isTrue
+                                            ? 'RESET PASSWORD'
+                                            : controller.formLogin.isTrue
+                                                ? 'MASUK'
+                                                : 'DAFTAR',
+                                style: TextStyle(
+                                  color: controller.formFPass.isTrue &&
+                                          controller.countdown.value != 0
+                                      ? Get.theme.buttonTheme.colorScheme
+                                          ?.primary
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                             Visibility(
@@ -190,11 +262,15 @@ class LoginView extends GetView<LoginController> {
                                 children: [
                                   const SizedBox(height: 16),
                                   InkWell(
-                                    onTap: controller.switchForm,
+                                    onTap: controller.formFPass.isTrue
+                                        ? controller.switchFPas
+                                        : controller.switchForm,
                                     child: Text(
-                                      controller.formLogin.value
-                                          ? 'DAFTAR'
-                                          : 'MASUK',
+                                      controller.formFPass.isTrue
+                                          ? 'MASUK'
+                                          : controller.formLogin.isTrue
+                                              ? 'DAFTAR'
+                                              : 'MASUK',
                                       style: TextStyle(
                                           color: Get.theme.buttonTheme
                                               .colorScheme?.primary,

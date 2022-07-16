@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -9,15 +8,17 @@ import '../../../routes/app_pages.dart';
 
 class LoginController extends GetxController {
   final AuthController authC = Get.find();
-  final validateMode = AutovalidateMode.disabled.obs;
-  final formLogin = true.obs;
+  final Rx validateMode = AutovalidateMode.disabled.obs;
+  final RxBool formFPass = false.obs;
+  final RxBool formLogin = true.obs;
+  final RxBool loading = false.obs;
+  final RxInt countdown = 0.obs;
   final formKey = GlobalKey<FormState>();
   final dataForm = {
     'email': TextEditingController(),
     'password': TextEditingController(),
     're_password': TextEditingController(),
   };
-  final focus = FocusNode();
   final RoundedLoadingButtonController btnController =
       RoundedLoadingButtonController();
 
@@ -57,19 +58,45 @@ class LoginController extends GetxController {
   }
 
   void switchForm() => formLogin.value = !formLogin.value;
+  void switchFPas() => formFPass.value = !formFPass.value;
+
+  void setCountdown() {
+    countdown.value = 60;
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (--countdown.value == 0) timer.cancel();
+    });
+  }
 
   void resetButton(bool success) {
     if (success) {
       btnController.success();
-      Timer(const Duration(milliseconds: 500),
-          () => Get.offAllNamed(Routes.home));
+      Timer(
+        const Duration(milliseconds: 500),
+        () => Get.offAllNamed(Routes.home),
+      );
     } else {
       btnController.error();
       Timer(const Duration(seconds: 1), () => btnController.reset());
     }
   }
 
+  void sucessDialog(message) {
+    btnController.success();
+    Get.defaultDialog(
+      title: 'Sukses',
+      titleStyle: const TextStyle(
+        color: Colors.white,
+      ),
+      middleText: message,
+      middleTextStyle: const TextStyle(
+        color: Colors.white,
+      ),
+      backgroundColor: Colors.green,
+    ).then((_) => btnController.reset());
+  }
+
   void errorDialog(message) {
+    btnController.error();
     Get.defaultDialog(
       title: 'ERROR',
       titleStyle: const TextStyle(
@@ -83,33 +110,43 @@ class LoginController extends GetxController {
     ).then((_) => btnController.reset());
   }
 
-  Future<void> register(data) async {
+  Future<void> onRegister(data) async {
     final response = await authC.register(data);
 
     if (response['status']) {
-      authC.sendVerif();
       btnController.success();
       Timer(const Duration(milliseconds: 500), () async {
         btnController.reset();
       });
+      await onSendVerif();
     } else {
-      btnController.error();
       errorDialog(response['message']);
     }
   }
 
-  Future<void> checkVerif() async {
+  Future<void> onSendVerif() async {
+    loading.value = true;
+    final response = await authC.sendVerif();
+
+    if (response['status']) {
+      setCountdown();
+    } else {
+      errorDialog(response['message']);
+    }
+    loading.value = false;
+  }
+
+  Future<void> onCheckVerif() async {
     final response = await authC.checkVerif();
 
     if (response['status']) {
       btnController.success();
     } else {
-      btnController.error();
       errorDialog(response['message']);
     }
   }
 
-  Future<void> login(data) async {
+  Future<void> onLogin(data) async {
     final response = await authC.login(data);
 
     if (response['status']) {
@@ -125,32 +162,42 @@ class LoginController extends GetxController {
         });
       }
     } else {
-      btnController.error();
       errorDialog(response['message']);
     }
   }
 
-  Future<void> forgotPassword() async {
-    await authC.auth.sendPasswordResetEmail(email: 'baguspangestu44@gmail.com');
+  Future<void> onForgotPassword(data) async {
+    final response = await authC.forgotPassword(data);
+
+    if (response['status']) {
+      formFPass.value = false;
+      setCountdown();
+      sucessDialog(response['message']);
+      Timer(const Duration(milliseconds: 500), () {
+        btnController.reset();
+      });
+    } else {
+      errorDialog(response['message']);
+    }
   }
 
-  void submit() {
+  void onSubmit() {
     validateMode.value = AutovalidateMode.onUserInteraction;
     final isValidForm = formKey.currentState!.validate();
     final data = {
-      'email': dataForm['email']?.text,
-      'password': dataForm['password']?.text,
+      'email': dataForm['email']?.text.trim(),
+      'password': dataForm['password']?.text.trim(),
     };
 
     if (isValidForm) {
       if (authC.loggedIn.isTrue && authC.verified.isFalse) {
-        checkVerif();
+        onCheckVerif();
+      } else if (formFPass.isTrue) {
+        onForgotPassword(data);
+      } else if (formLogin.isTrue) {
+        onLogin(data);
       } else {
-        if (formLogin.value) {
-          login(data);
-        } else {
-          register(data);
-        }
+        onRegister(data);
       }
     } else {
       resetButton(false);

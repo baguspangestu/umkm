@@ -21,12 +21,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: "UMKM Pringsewu",
+      title: Config.app.name,
       initialRoute: AppPages.initial,
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Lato',
+        fontFamily: Config.app.font,
         primarySwatch: Config.app.colorPrimary,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
