@@ -8,6 +8,8 @@ import '../modules/myumkm/bindings/myumkm_binding.dart';
 import '../modules/myumkm/views/myumkm_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/register/bindings/register_binding.dart';
+import '../modules/register/views/register_view.dart';
 import '../modules/umkm/bindings/umkm_binding.dart';
 import '../modules/umkm/views/umkm_view.dart';
 import '../modules/users/bindings/users_binding.dart';
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.users,
       page: () => const UsersView(),
       binding: UsersBinding(),
+    ),
+    GetPage(
+      name: _Paths.register,
+      page: () => const RegisterView(),
+      binding: RegisterBinding(),
     ),
   ];
 }

@@ -9,6 +9,7 @@ abstract class Routes {
   static const profile = _Paths.profile;
   static const myumkm = _Paths.myumkm;
   static const users = _Paths.users;
+  static const register = _Paths.register;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const profile = '/profile';
   static const myumkm = '/myumkm';
   static const users = '/users';
+  static const register = '/register';
 }

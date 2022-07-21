@@ -14,10 +14,10 @@ class HomeView extends StatelessWidget {
           appBar: AppBar(
             toolbarHeight: Get.height * 0.1,
             title: ListTile(
-              leading: Image.asset(Config.app.logo),
-              title: const Text(
-                'USAHA MIKRO KECIL MENENGAH (UMKM) KABUPATEN PRINGSEWU',
-                style: TextStyle(
+              leading: Image.asset(Config.utils.logo),
+              title: Text(
+                Config.app.longName,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                   color: Colors.white,

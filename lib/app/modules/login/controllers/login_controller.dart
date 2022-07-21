@@ -141,6 +141,9 @@ class LoginController extends GetxController {
 
     if (response['status']) {
       btnController.success();
+      Timer(const Duration(milliseconds: 500), () async {
+        Get.offAllNamed(Routes.register);
+      });
     } else {
       errorDialog(response['message']);
     }

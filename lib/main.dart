@@ -8,9 +8,7 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.android,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
   Get.put(AuthController(), permanent: true);
   runApp(const MyApp());
 }
@@ -26,8 +24,8 @@ class MyApp extends StatelessWidget {
       getPages: AppPages.routes,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: Config.app.font,
-        primarySwatch: Config.app.colorPrimary,
+        fontFamily: Config.utils.font,
+        primarySwatch: Config.utils.colorPrimary,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
     );

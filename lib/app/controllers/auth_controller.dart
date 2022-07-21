@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:umkm/app/config/config.dart';
@@ -8,6 +9,7 @@ import '../routes/app_pages.dart';
 
 class AuthController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final RxBool loggedIn = false.obs;
   final RxBool verified = false.obs;
@@ -217,5 +219,21 @@ class AuthController extends GetxController {
       'status': true,
       'message': 'Berhasil Logout',
     };
+  }
+
+  Future<bool> cekData(uid) async {
+    return await firestore
+        .collection('users')
+        .doc(uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catchError((_) {
+      return false;
+    });
   }
 }

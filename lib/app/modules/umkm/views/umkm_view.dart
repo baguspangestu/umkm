@@ -48,7 +48,7 @@ class UmkmView extends GetView<UmkmController> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     contentPadding: const EdgeInsets.all(8),
-                    leading: Image.asset(Config.app.logo),
+                    leading: Image.asset(Config.utils.logo),
                     title: Text(
                       controller.items[index],
                       style: const TextStyle(

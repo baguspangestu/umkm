@@ -16,6 +16,8 @@ dependencies:
   rounded_loading_button: ^2.1.0
   validators: ^3.0.0
   toggle_switch: ^2.0.1
+  cloud_firestore: ^3.3.0
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -25,14 +27,14 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/logo.png
+  image: assets/images/splash.png
   color_dark: "#121212"
-  image_dark: assets/images/logo.png
+  image_dark: assets/images/splash.png
 
   android_12:
-    image: assets/images/logo.png
+    image: assets/images/splash.png
     icon_background_color: "#ffffff"
-    image_dark: assets/images/logo.png
+    image_dark: assets/images/splash.png
     icon_background_color_dark: "#121212"
 
   web: false
@@ -41,6 +43,9 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/data/
+    - assets/data/kecamatan/
+    - assets/data/kelurahan/
   fonts:
     - family: Lato
       fonts:

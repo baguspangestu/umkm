@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:umkm/app/modules/myumkm/views/myumkm_view.dart';
 import 'package:umkm/app/modules/profile/views/profile_view.dart';
 import 'package:umkm/app/modules/users/views/users_view.dart';
+import 'package:umkm/app/routes/app_pages.dart';
 
 import '../../../controllers/auth_controller.dart';
 import '../../login/views/login_view.dart';
@@ -19,10 +20,11 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     initDisplay();
+
     super.onInit();
   }
 
-  void initDisplay() {
+  Future<void> initDisplay() async {
     if (kDebugMode) {
       print('loggedIn: ${authC.loggedIn.value}');
       print('verified: ${authC.verified.value}');
@@ -55,6 +57,8 @@ class HomeController extends GetxController {
           const ProfileView(),
         ],
       };
+      final isHaveData = await authC.cekData(authC.auth.currentUser!.uid);
+      if (!isHaveData) Get.offAllNamed(Routes.register);
     } else {
       displays.value = {
         'icons': [navbarItem(Icons.home), navbarItem(Icons.login)],
