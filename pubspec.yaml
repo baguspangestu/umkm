@@ -18,6 +18,9 @@ dependencies:
   toggle_switch: ^2.0.1
   cloud_firestore: ^3.3.0
   http: ^0.13.4
+  image_picker: ^0.8.5+3
+  carousel_slider: ^4.1.1
+  pull_to_refresh: ^2.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -44,6 +47,7 @@ flutter:
   assets:
     - assets/images/
     - assets/data/
+    - assets/data/kabupaten/
     - assets/data/kecamatan/
     - assets/data/kelurahan/
   fonts:

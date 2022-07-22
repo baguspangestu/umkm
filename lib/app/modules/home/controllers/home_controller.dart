@@ -48,7 +48,7 @@ class HomeController extends GetxController {
       displays.value = {
         'icons': [
           navbarItem(Icons.home),
-          navbarItem(Icons.list),
+          navbarItem(Icons.store),
           navbarItem(Icons.person)
         ],
         'pages': [

@@ -15,6 +15,9 @@ class AuthController extends GetxController {
   final RxBool verified = false.obs;
   final RxBool admin = false.obs;
 
+  final CollectionReference umkmCollection =
+      FirebaseFirestore.instance.collection('umkm');
+
   @override
   Future<void> onInit() async {
     isAuth();
@@ -222,8 +225,7 @@ class AuthController extends GetxController {
   }
 
   Future<bool> cekData(uid) async {
-    return await firestore
-        .collection('users')
+    return await umkmCollection
         .doc(uid)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
@@ -235,5 +237,37 @@ class AuthController extends GetxController {
     }).catchError((_) {
       return false;
     });
+  }
+
+  Future<Map> inputData(Map data) async {
+    try {
+      final uid = auth.currentUser!.uid;
+      return await umkmCollection
+          .doc(uid)
+          .set({
+            'uid': uid,
+            'createdAt': FieldValue.serverTimestamp(),
+            'status': false,
+            'ktp': data['ktp'],
+            'umkm': data['umkm'],
+          }, SetOptions(merge: true))
+          .then(
+            (_) => {
+              'status': true,
+              'message': 'Berhasil melengkapi data',
+            },
+          )
+          .catchError(
+            (_) => {
+              'status': false,
+              'message': 'Gagal menyimpan data, silakan coba lagi!',
+            },
+          );
+    } catch (_) {
+      return {
+        'status': false,
+        'message': 'Kesalahan tidak diketahui, silakan coba lagi.',
+      };
+    }
   }
 }

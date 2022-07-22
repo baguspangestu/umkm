@@ -30,10 +30,20 @@ class Utils {
 class Limit {
   const Limit();
   int get nik => 16;
+  int get namaUsaha => 30;
 }
 
 class Data {
   const Data();
-  String kecamatan(id) => 'assets/data/kecamatan/$id.json';
-  String kelurahan(id) => 'assets/data/kelurahan/$id.json';
+  String get root => 'assets/data/';
+
+  String get gender => '${root}gender.json';
+
+  String get provinsi => '${root}provinsi.json';
+  String kabupaten(id) => '${root}kabupaten/$id.json';
+  String kecamatan(id) => '${root}kecamatan/$id.json';
+  String kelurahan(id) => '${root}kelurahan/$id.json';
+
+  String get jenisUsaha => '${root}jenis-usaha.json';
+  String get jumlahModal => '${root}jumlah-modal.json';
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:umkm/app/config/config.dart';
 import 'app/controllers/auth_controller.dart';
+import 'app/controllers/data_controller.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
@@ -10,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
   Get.put(AuthController(), permanent: true);
+  Get.put(DataController(), permanent: true);
   runApp(const MyApp());
 }
 
