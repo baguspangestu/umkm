@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:umkm/app/config/string.dart';
 
 class UmkmModel {
   String? uid;
@@ -56,7 +57,7 @@ class Ktp {
 
     nik = json['nik'];
     jk = json['jk'] == 'L' ? 'Laki-laki' : 'Perempuan';
-    nama = json['nama'];
+    nama = '${json['nama']}'.toTitleCase();
     alamat = getNama(dataAlamat, json['alamat'].substring(0, 6));
   }
 
@@ -105,7 +106,7 @@ class Umkm {
     jumlahModal = getNama(dataModalUsaha, json['jumlahModal']);
     jenisUsaha = getNama(dataJenisUsaha, json['jenisUsaha']);
     namaKelompok = json['namaKelompok'];
-    namaUsaha = json['namaUsaha'];
+    namaUsaha = '${json['namaUsaha']}'.toTitleCase();
   }
 
   Map<String, dynamic> toJson() {
